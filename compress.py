@@ -1,82 +1,131 @@
 from bitstring import BitArray, BitStream
-import math
+import math, sys
 
-data = open("file", "rb").read()
+
+data = open(sys.argv[1], "rb")
+print(data)
 bitstring = BitArray(data)
 print(bitstring)
 print(bitstring.bin)
 
 
-list = [""]
-
 x = BitArray()
-output = BitArray()
+output = BitArray()     # bitstring
 c = BitArray()
 
-x = bitstring.bin[0]
-output = bitstring.bin[0]
-c = bitstring.bin[0]
+#output = bitstring.bin[0]       # string
+#c = bitstring.bin[0]
 
-index = 1
-indexX = 0
+
+#list = [""]
+list = {"": 0}
+
+list_index = 1
+index = 0
+sec_index = 0
 i = 0
 
 newloop = False
 y_list = False
 
 while index < len(bitstring):
+    if newloop == False:
+        #x = bitstring.bin[index]
+        x = bitstring[index:index+1]
+        sec_index = 0
+    else:
+        #x += bitstring.bin[index]
+        x = bitstring[index-sec_index:index+1]
+        newloop = False
+    
+    #print("\nXXXXXX:" + str(x.bin))
+    #print("index:" + str(index))
+    """
     for elem in list:
         if elem == x:
             newloop = True
+            sec_index += 1
             break
-    
+    """
+
+    if x.bin in list:
+        newloop = True
+        sec_index += 1
+
     if newloop == False:
-        print("index:" + str(index-1))
         if len(str(x)) == 1:
             y = ""
+            #print("Y:" + str(y))
             b = x
+            #print("B:" + str(b))
         else:
             y = x[0:len(x)-1]
-            print("Y:" + str(y))
+            #print("Y:" + str(y))
             b = x[-1:]
-            print("B:" + str(b))
+            #print("B:" + str(b))
         
+        """
         for elem in list:
             if elem == y:
                 y_list = True
                 i = list.index(elem)
                 break
+        """
+        
+        if y.bin in list:
+            y_list = True
+            i = list.get(y.bin)
+            #print("I:" + str(i))
 
         if y_list == True:
-            binary_i = "{0:b}".format(i)
-            print("binary:" + str(binary_i))
-            if len(binary_i) < math.log(len(list),2):
-                count = 0
-                while count < math.log(len(list),2)-1:
-                    c += '0'
+            binary_i = bin(i)
+            
+            if len(binary_i)-2 < math.ceil(math.log(len(list),2)):
+                count = len(binary_i)-2
+                while count < math.ceil(math.log(len(list),2)):
+                    c.append('0b0')
                     count += 1
             
-            c += "{0:b}".format(i)
-            c += b
-            print(c)
-            c = c[1:len(c)]
-            print("c:" + str(c))
+            #print("binary:" + str(binary_i))
+            if len(list) != 1:
+                c.append(bin(i))
+            c.append(b)
+            #c = c[1:len(c)]
+            #print(type(c))
+            #print("c:" + str(c.bin))
             
-        output += c
+        output.append(c)
+        #print("OUTPU:" + str(output.bin))
 
-        list.append(x)
-        x = bitstring.bin[index]
-    
-    else:
-        x += bitstring.bin[index]
+        #list.append(x)
+        list[x.bin] = list_index
+        list_index += 1
+        #print("SIZE LIST:" + str(len(list)))
 
     index += 1
-    indexX = len(x)-1
-    newloop = False
+    #list_index += 1
     y_list = False
-    c = bitstring.bin[0]
+    c = BitArray()
     
 
-output = output[1:len(output)]
-print(output)
+# sobra bits
+
+
+#output = output[1:len(output)]
+print(output.bin)
+
+"""
+output_bytes = ""
+for byte in output.cut(8):
+    print(byte)
+    output_bytes += byte
+
+print(output_bytes)
+
+
+data.close()
+"""
+output_file = open(sys.argv[2], "w")
+output_file.write(output.bin)
+
 
