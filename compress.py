@@ -53,11 +53,11 @@ while index < len(bitstring):
         sec_index += 1
 
     if newloop == False:
-        if len(str(x)) == 1:
+        if len(x) == 1:
             y = ""
-            #print("Y:" + str(y))
+            print("Y:" + str(y))
             b = x
-            #print("B:" + str(b))
+            print("B:" + str(b))
         else:
             y = x[0:len(x)-1]
             #print("Y:" + str(y))
@@ -72,10 +72,14 @@ while index < len(bitstring):
                 break
         """
         
-        if y.bin in list:
+        if len(x) != 1:
+            if y.bin in list:
+                y_list = True
+                i = list.get(y.bin)
+                #print("I:" + str(i))
+        else:
             y_list = True
-            i = list.get(y.bin)
-            #print("I:" + str(i))
+            i = 0
 
         if y_list == True:
             binary_i = bin(i)
@@ -114,18 +118,23 @@ while index < len(bitstring):
 #output = output[1:len(output)]
 print(output.bin)
 
-"""
-output_bytes = ""
-for byte in output.cut(8):
-    print(byte)
-    output_bytes += byte
 
-print(output_bytes)
+output_bytes = []
+#print(len(output))
+for byte in output.cut(8):
+    #print(byte.bin)
+    #print(type(byte))
+    output_bytes.append(byte.hex)
+
+#print(output_bytes)
+#print(type(output_bytes))
 
 
 data.close()
-"""
-output_file = open(sys.argv[2], "w")
-output_file.write(output.bin)
+
+with open(sys.argv[2], "wb") as output_file:
+    output_file.write(bytearray(int(i,16) for i in output_bytes))
+
+#output_file.write(output_bytes)
 
 
