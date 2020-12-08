@@ -7,6 +7,7 @@ print(data)
 bitstring = BitArray(data)
 print(bitstring)
 print(bitstring.bin)
+data.close()
 
 
 x = BitArray()
@@ -55,9 +56,9 @@ while index < len(bitstring):
     if newloop == False:
         if len(x) == 1:
             y = ""
-            print("Y:" + str(y))
+            #print("Y:" + str(y))
             b = x
-            print("B:" + str(b))
+            #print("B:" + str(b))
         else:
             y = x[0:len(x)-1]
             #print("Y:" + str(y))
@@ -113,8 +114,19 @@ while index < len(bitstring):
     
 
 # sobra bits
+print("XXX:" + str(x.bin))
+index = 0
+d = BitArray()
 
+while index < len(x):
+    if x.bin[index:index+1] == '0':
+        d.append('0b000')
+    else:
+        d.append('0b111')
+    index += 1
 
+#print(d)
+output.append(d)
 #output = output[1:len(output)]
 print(output.bin)
 
@@ -130,8 +142,7 @@ for byte in output.cut(8):
 #print(type(output_bytes))
 
 
-data.close()
-
+print(len(output))
 with open(sys.argv[2], "wb") as output_file:
     output_file.write(bytearray(int(i,16) for i in output_bytes))
 
