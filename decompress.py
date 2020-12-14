@@ -8,16 +8,37 @@ complete_bitstring = BitArray(data)
 print(complete_bitstring)
 print(complete_bitstring.bin)
 
-num_extra_bits = complete_bitstring[-8:]
-print(num_extra_bits)
-num = int(num_extra_bits.bin, 2)
+
+# num de bits onde a seguir se acrescentou 8-num 0s para fzr 1 byte
+num = int(complete_bitstring[-8:].bin, 2)
+del(complete_bitstring[-8:])
 print(num)
+print(complete_bitstring.bin)
 
-bitstring = complete_bitstring[0:len(complete_bitstring)-(num+8)]
-print(bitstring.bin)
 
-r_bitstring = complete_bitstring[len(complete_bitstring)-(num+8):len(complete_bitstring)-8]
-print(r_bitstring.bin)
+bits = complete_bitstring[-8:]
+print(bits.bin)
+#del(bits[-(8-num):])
+print("HERE")
+if num != 0:
+    del(complete_bitstring[-(8-num):])
+#size = len(bits)
+#print(size)
+
+
+# num de bits que se codificou c o codigo da repeticao
+num_bits_binary = complete_bitstring[-8:]
+print(num_bits_binary.bin)
+num_bits = int(num_bits_binary.bin, 2)
+print(num_bits)
+
+if num_bits != 0:
+    bitstring = complete_bitstring[0:len(complete_bitstring)-(num_bits+8)]
+    print(bitstring.bin)
+
+    r_bitstring = complete_bitstring[len(complete_bitstring)-(num_bits+8):len(complete_bitstring)-8]
+    print(r_bitstring.bin)
+
 
 x = BitArray()
 output = BitArray()
