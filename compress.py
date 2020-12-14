@@ -3,9 +3,9 @@ import math, sys
 
 
 data = open(sys.argv[1], "rb")
-print(data)
+#print(data)
 bitstring = BitArray(data)
-print(bitstring)
+#print(bitstring)
 print(bitstring.bin)
 data.close()
 
@@ -117,6 +117,7 @@ while index < len(bitstring):
 print("XXX:" + str(x.bin))
 index = 0
 d = BitArray()
+print(len(x))
 
 while index < len(x):
     if x.bin[index:index+1] == '0':
@@ -128,8 +129,27 @@ while index < len(x):
 #print(d)
 output.append(d)
 #output = output[1:len(output)]
-print(output.bin)
+#print(output.bin)
 
+num_bits_extra = len(d)
+#print("LEN D: " + str(len(d)))
+num_bits_extra_binary = bin(num_bits_extra)
+#print("here")
+#print(bin(num_bits_extra))
+#print(len(bin(num_bits_extra)))
+
+num_bits_extra_binary_8 = BitArray()
+count = len(num_bits_extra_binary)-2
+#print(count)
+while count < 8:
+    num_bits_extra_binary_8.append('0b0')
+    count += 1
+#print("OLA")
+num_bits_extra_binary_8.append(num_bits_extra_binary)
+#print(num_bits_extra_binary_8.bin)
+#print(len(num_bits_extra_binary_8))
+output.append(num_bits_extra_binary_8)
+print(output.bin)
 
 output_bytes = []
 #print(len(output))
@@ -140,11 +160,11 @@ for byte in output.cut(8):
 
 #print(output_bytes)
 #print(type(output_bytes))
+#output_bytes.append(num_bits_extra_binary_8.hex)
 
-
-print(len(output))
-with open(sys.argv[2], "wb") as output_file:
-    output_file.write(bytearray(int(i,16) for i in output_bytes))
+#print(len(output))
+output_file = open(sys.argv[2], "wb")
+output_file.write(bytearray(int(i,16) for i in output_bytes))
 
 #output_file.write(output_bytes)
 
