@@ -1,4 +1,4 @@
-from bitstring import BitArray, BitStream
+from bitstring import BitArray
 import math, sys
 
 
@@ -6,9 +6,11 @@ data = open(sys.argv[1], "rb")
 #print(data)
 bitstring = BitArray(data)
 #print(bitstring)
-print(bitstring.bin)
+#print(bitstring.bin)
 data.close()
 
+#print(len(bitstring)%8)
+#print(len(bitstring.bin)%8)
 
 x = BitArray()
 output = BitArray()     # bitstring
@@ -113,43 +115,81 @@ while index < len(bitstring):
     c = BitArray()
     
 
-# sobra bits
-print("XXX:" + str(x.bin))
-index = 0
-d = BitArray()
-print(len(x))
+######## SOBRA BITS
+if len(x) != 0:
+    #print("XXX:" + str(x.bin))
+    index = 0
+    r = BitArray()
+    #print(len(x))
 
-while index < len(x):
-    if x.bin[index:index+1] == '0':
-        d.append('0b000')
-    else:
-        d.append('0b111')
-    index += 1
+    while index < len(x):
+        #print("hey")
+        if x.bin[index:index+1] == '0':
+            r.append('0b000')
+        else:
+            r.append('0b111')
+        index += 1
 
-#print(d)
-output.append(d)
-#output = output[1:len(output)]
+    output.append(r)
+    #output = output[1:len(output)]
+    #print(output.bin)
+
+    num_bits_extra = len(r)
+    #print("LEN D: " + str(len(r)))
+    num_bits_extra_binary = bin(num_bits_extra)
+    #print("here")
+    #print(bin(num_bits_extra))
+    #print(len(bin(num_bits_extra)))
+
+    # nº bits q sobram do algoritmo em bits (8 bits)
+    num_bits_extra_binary_8 = BitArray()
+    count = len(num_bits_extra_binary)-2
+    #print(count)
+    while count < 8:
+        num_bits_extra_binary_8.append('0b0')
+        count += 1
+
+    num_bits_extra_binary_8.append(num_bits_extra_binary)
+    #print(num_bits_extra_binary_8.bin)
+    #print(len(num_bits_extra_binary_8))
+    output.append(num_bits_extra_binary_8)
+    #print(output.bin)
+
+
+else:
+    output.append('0b00000000')
+
+
+
+######## acrescentar 0 p ter multiplo de 8
+#print(len(output.bin) % 8)
+num_bits = len(output.bin) % 8
+if num_bits != 0: 
+    index = num_bits
+    #print(index)
+    while index < 8:
+        output.append('0b0')
+        index += 1
+
+    #print("kkkk")
+    #print(output.bin)
+    num_bits_binary = bin(num_bits)
+    size = len(num_bits_binary) - 2
+    while size != 8:
+        output.append('0b0')
+        size += 1
+
+    #print(bin(num_bits))
+    #print(num_bits_binary)
+    output.append(num_bits_binary)
+
+else:
+    output.append('0b00000000')
+
+#print("HERE")
 #print(output.bin)
-
-num_bits_extra = len(d)
-#print("LEN D: " + str(len(d)))
-num_bits_extra_binary = bin(num_bits_extra)
-#print("here")
-#print(bin(num_bits_extra))
-#print(len(bin(num_bits_extra)))
-
-num_bits_extra_binary_8 = BitArray()
-count = len(num_bits_extra_binary)-2
-#print(count)
-while count < 8:
-    num_bits_extra_binary_8.append('0b0')
-    count += 1
-#print("OLA")
-num_bits_extra_binary_8.append(num_bits_extra_binary)
-#print(num_bits_extra_binary_8.bin)
-#print(len(num_bits_extra_binary_8))
-output.append(num_bits_extra_binary_8)
-print(output.bin)
+num_bits = len(output.bin) % 8
+#print(num_bits)
 
 output_bytes = []
 #print(len(output))
@@ -158,9 +198,7 @@ for byte in output.cut(8):
     #print(type(byte))
     output_bytes.append(byte.hex)
 
-#print(output_bytes)
-#print(type(output_bytes))
-#output_bytes.append(num_bits_extra_binary_8.hex)
+
 
 #print(len(output))
 output_file = open(sys.argv[2], "wb")
