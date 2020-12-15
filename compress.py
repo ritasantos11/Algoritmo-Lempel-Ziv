@@ -9,18 +9,12 @@ bitstring = BitArray(data)
 #print(bitstring.bin)
 data.close()
 
-#print(len(bitstring)%8)
-#print(len(bitstring.bin)%8)
 
 x = BitArray()
-output = BitArray()     # bitstring
 c = BitArray()
-
-#output = bitstring.bin[0]       # string
-#c = bitstring.bin[0]
+output = BitArray()
 
 
-#list = [""]
 list = {"": 0}
 
 list_index = 1
@@ -33,23 +27,11 @@ y_list = False
 
 while index < len(bitstring):
     if newloop == False:
-        #x = bitstring.bin[index]
         x = bitstring[index:index+1]
         sec_index = 0
     else:
-        #x += bitstring.bin[index]
         x = bitstring[index-sec_index:index+1]
         newloop = False
-    
-    #print("\nXXXXXX:" + str(x.bin))
-    #print("index:" + str(index))
-    """
-    for elem in list:
-        if elem == x:
-            newloop = True
-            sec_index += 1
-            break
-    """
 
     if x.bin in list:
         newloop = True
@@ -58,28 +40,15 @@ while index < len(bitstring):
     if newloop == False:
         if len(x) == 1:
             y = ""
-            #print("Y:" + str(y))
             b = x
-            #print("B:" + str(b))
         else:
             y = x[0:len(x)-1]
-            #print("Y:" + str(y))
             b = x[-1:]
-            #print("B:" + str(b))
-        
-        """
-        for elem in list:
-            if elem == y:
-                y_list = True
-                i = list.index(elem)
-                break
-        """
         
         if len(x) != 1:
             if y.bin in list:
                 y_list = True
                 i = list.get(y.bin)
-                #print("I:" + str(i))
         else:
             y_list = True
             i = 0
@@ -93,37 +62,26 @@ while index < len(bitstring):
                     c.append('0b0')
                     count += 1
             
-            #print("binary:" + str(binary_i))
             if len(list) != 1:
                 c.append(bin(i))
             c.append(b)
-            #c = c[1:len(c)]
-            #print(type(c))
-            #print("c:" + str(c.bin))
             
         output.append(c)
-        #print("OUTPU:" + str(output.bin))
 
-        #list.append(x)
         list[x.bin] = list_index
         list_index += 1
-        #print("SIZE LIST:" + str(len(list)))
 
     index += 1
-    #list_index += 1
     y_list = False
     c = BitArray()
     
 
 ######## SOBRA BITS
 if len(x) != 0:
-    #print("XXX:" + str(x.bin))
     index = 0
     r = BitArray()
-    #print(len(x))
 
     while index < len(x):
-        #print("hey")
         if x.bin[index:index+1] == '0':
             r.append('0b000')
         else:
@@ -131,30 +89,19 @@ if len(x) != 0:
         index += 1
 
     output.append(r)
-    #output = output[1:len(output)]
-    #print(output.bin)
 
-    num_bits_extra = len(r)
-    #print("LEN D: " + str(len(r)))
-    num_bits_extra_binary = bin(num_bits_extra)
-    #print("here")
-    #print(bin(num_bits_extra))
-    #print(len(bin(num_bits_extra)))
+    # nº de bits q sobrou do algoritmo * 3
+    num_bits_extra_binary = bin(len(r))
 
-    # nº bits q sobram do algoritmo em bits (8 bits)
+    # nº bits q sobram do algoritmo * 3 em 8 bits
     num_bits_extra_binary_8 = BitArray()
     count = len(num_bits_extra_binary)-2
-    #print(count)
     while count < 8:
         num_bits_extra_binary_8.append('0b0')
         count += 1
 
     num_bits_extra_binary_8.append(num_bits_extra_binary)
-    #print(num_bits_extra_binary_8.bin)
-    #print(len(num_bits_extra_binary_8))
     output.append(num_bits_extra_binary_8)
-    #print(output.bin)
-
 
 else:
     output.append('0b00000000')
@@ -162,48 +109,34 @@ else:
 
 
 ######## acrescentar 0 p ter multiplo de 8
-#print(len(output.bin) % 8)
 num_bits = len(output.bin) % 8
 if num_bits != 0: 
     index = num_bits
-    #print(index)
     while index < 8:
         output.append('0b0')
         index += 1
 
-    #print("kkkk")
-    #print(output.bin)
     num_bits_binary = bin(num_bits)
     size = len(num_bits_binary) - 2
     while size != 8:
         output.append('0b0')
         size += 1
 
-    #print(bin(num_bits))
-    #print(num_bits_binary)
     output.append(num_bits_binary)
 
 else:
     output.append('0b00000000')
 
-#print("HERE")
-#print(output.bin)
-num_bits = len(output.bin) % 8
-#print(num_bits)
+
 
 output_bytes = []
-#print(len(output))
 for byte in output.cut(8):
-    #print(byte.bin)
-    #print(type(byte))
+    print(byte)
     output_bytes.append(byte.hex)
 
 
-
-#print(len(output))
 output_file = open(sys.argv[2], "wb")
 output_file.write(bytearray(int(i,16) for i in output_bytes))
-
-#output_file.write(output_bytes)
+output_file.close()
 
 
