@@ -9,6 +9,8 @@ bitstring = BitArray(data)
 #print(bitstring.bin)
 data.close()
 
+#print(len(bitstring)%8)
+#print(len(bitstring.bin)%8)
 
 x = BitArray()
 c = BitArray()
@@ -126,7 +128,6 @@ if num_bits != 0:
 
 else:
     output.append('0b00000000')
-
 
 
 output_bytes = []
