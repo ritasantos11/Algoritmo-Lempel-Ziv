@@ -132,12 +132,11 @@ else:
 
 output_bytes = []
 for byte in output.cut(8):
-    print(byte)
-    output_bytes.append(byte.hex)
+    output_bytes.append(byte.bin)
 
 
 output_file = open(sys.argv[2], "wb")
-output_file.write(bytearray(int(i,16) for i in output_bytes))
+output_file.write(bytearray(int(i,2) for i in output_bytes))
 output_file.close()
 
 

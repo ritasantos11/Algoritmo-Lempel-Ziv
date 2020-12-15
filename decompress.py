@@ -12,7 +12,7 @@ data.close()
 
 
 # nº de bits onde a seguir se acrescentou 8-num 0s para fzr 1 byte
-num = int(complete_bitstring[-8:].bin, 2)
+num = complete_bitstring[-8:].uint
 del(complete_bitstring[-8:])
 if num != 0:
     del(complete_bitstring[-(8-num):])
@@ -21,15 +21,13 @@ if num != 0:
 # nº de bits que se codificou c o codigo da repeticao * 3 em binario
 num_bits_binary = complete_bitstring[-8:]
 # nº de bits que se codificou c o codigo da repeticao * 3
-num_bits = int(num_bits_binary.bin, 2)
+num_bits = num_bits_binary.uint
 
 if num_bits != 0:
     bitstring = complete_bitstring[0:len(complete_bitstring)-(num_bits+8)]
-    print(bitstring.bin)
 
     # vai conter os num_bits bits que se codificou c o codigo da repeticao
     r_bitstring = complete_bitstring[len(complete_bitstring)-(num_bits+8):len(complete_bitstring)-8]
-    print(r_bitstring.bin)
 
 
 x = BitArray()
@@ -101,10 +99,10 @@ while index < len(r_bitstring.bin):
 
 output_bytes = []
 for byte in output.cut(8):
-    output_bytes.append(byte.hex)
+    output_bytes.append(byte.bin)
 
 
 output_file = open(sys.argv[2], "wb")
-output_file.write(bytearray(int(i,16) for i in output_bytes))
+output_file.write(bytearray(int(i,2) for i in output_bytes))
 output_file.close()
 
