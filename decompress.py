@@ -99,10 +99,11 @@ while index < len(r_bitstring.bin):
 
 output_bytes = []
 for byte in output.cut(8):
-    output_bytes.append(byte.bin)
+    output_bytes.append(byte.uint)
 
 
 output_file = open(sys.argv[2], "wb")
-output_file.write(bytearray(int(i,2) for i in output_bytes))
+#output_file.write(bytearray(int(i,2) for i in output_bytes))
+output_file.write(bytearray(output_bytes))
 output_file.close()
 
