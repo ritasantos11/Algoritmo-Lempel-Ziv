@@ -3,14 +3,10 @@ import math, sys
 
 
 data = open(sys.argv[1], "rb")
-#print(data)
 bitstring = BitArray(data)
-#print(bitstring)
-#print(bitstring.bin)
 data.close()
+#print(bitstring.bin)
 
-#print(len(bitstring)%8)
-#print(len(bitstring.bin)%8)
 
 x = BitArray()
 c = BitArray()
@@ -78,7 +74,8 @@ while index < len(bitstring):
     c = BitArray()
     
 
-######## SOBRA BITS
+
+### sobra bits
 if len(x) != 0:
     index = 0
     r = BitArray()
@@ -97,7 +94,7 @@ if len(x) != 0:
 
     # nº bits q sobram do algoritmo * 3 em 8 bits
     num_bits_extra_binary_8 = BitArray()
-    count = len(num_bits_extra_binary)-2
+    count = len(num_bits_extra_binary) - 2
     while count < 8:
         num_bits_extra_binary_8.append('0b0')
         count += 1
@@ -110,7 +107,7 @@ else:
 
 
 
-######## acrescentar 0 p ter multiplo de 8
+### acrescentar 0s p ser multiplo de 8
 num_bits = len(output.bin) % 8
 if num_bits != 0: 
     index = num_bits
@@ -118,6 +115,7 @@ if num_bits != 0:
         output.append('0b0')
         index += 1
 
+    # nº bits que antes tinham sobrado e que por isso se acrescentou 0s para fzr 1 byte
     num_bits_binary = bin(num_bits)
     size = len(num_bits_binary) - 2
     while size != 8:
@@ -130,13 +128,16 @@ else:
     output.append('0b00000000')
 
 
+#print(output.bin)
+
+
 output_bytes = []
 for byte in output.cut(8):
-    output_bytes.append(byte.bin)
+    output_bytes.append(byte.uint)
 
 
 output_file = open(sys.argv[2], "wb")
-output_file.write(bytearray(int(i,2) for i in output_bytes))
+output_file.write(bytearray(output_bytes))
 output_file.close()
 
 
