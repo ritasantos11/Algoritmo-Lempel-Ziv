@@ -89,22 +89,33 @@ if len(x) != 0:
 
     output.append(r)
 
-    # nº de bits q sobrou do algoritmo * 3
-    num_bits_extra_binary = bin(len(r))
+    # nº de bits que sobrou do algoritmo
+    num_bits_extra_binary = bin(len(x))
 
-    # nº bits q sobram do algoritmo * 3 em 8 bits
+    # nº bits que sobrou do algoritmo em 8 bits
     num_bits_extra_binary_8 = BitArray()
     count = len(num_bits_extra_binary) - 2
-    while count < 8:
+    while count%8 != 0:
         num_bits_extra_binary_8.append('0b0')
         count += 1
 
     num_bits_extra_binary_8.append(num_bits_extra_binary)
     output.append(num_bits_extra_binary_8)
 
+    # nº bytes que o nº bits que sobrou do algoritmo ocupa
+    num_bytes_binary_8 = BitArray()
+    num_bytes = int(count/8)
+    num_bytes_binary = bin(num_bytes)
+    count = len(num_bytes_binary) - 2
+    while count < 8:
+        num_bytes_binary_8.append('0b0')
+        count += 1
+
+    num_bytes_binary_8.append(num_bytes_binary)
+    output.append(num_bytes_binary_8)
+
 else:
     output.append('0b00000000')
-
 
 
 ### acrescentar 0s p ser multiplo de 8

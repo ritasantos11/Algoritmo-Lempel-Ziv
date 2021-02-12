@@ -15,17 +15,24 @@ if num != 0:    # apagar os 0s que se acrescentou para fazer 1 byte
     del(complete_bitstring[-(8-num):])
 
 
-# nº bits que se codificou com o codigo da repeticao * 3 em binario
-num_bits_binary = complete_bitstring[-8:]
-# nº bits que se codificou com o codigo da repeticao * 3
-num_bits = num_bits_binary.uint
+# nº bytes que o nº bits que sobrou do algoritmo ocupa
+num_bytes = complete_bitstring[-8:].uint
+num_bits = num_bytes*8
 
-if num_bits != 0:
+del(complete_bitstring[-8:])
+
+# nº bits que se codificou com o codigo da repeticao em binario
+num_bits_r_bitstring = complete_bitstring[-num_bits:]
+# nº bits que se codificou com o codigo da repeticao
+size_r_bitstring = num_bits_r_bitstring.uint * 3
+
+if size_r_bitstring != 0:
     # bitstring vai conter os bits que se codificou pelo Lempez-Ziv
-    bitstring = complete_bitstring[0:len(complete_bitstring)-(num_bits+8)]
+    bitstring = complete_bitstring[0:len(complete_bitstring)-(num_bits+size_r_bitstring)]
 
     # r_bitstring vai conter os num_bits bits que se codificou com o codigo da repeticao
-    r_bitstring = complete_bitstring[len(complete_bitstring)-(num_bits+8):len(complete_bitstring)-8]
+    r_bitstring = complete_bitstring[len(complete_bitstring)-(num_bits+size_r_bitstring):len(complete_bitstring)-(num_bits)]
+
 
 
 x = BitArray()
@@ -103,4 +110,5 @@ for byte in output.cut(8):
 output_file = open(sys.argv[2], "wb")
 output_file.write(bytearray(output_bytes))
 output_file.close()
+
 
